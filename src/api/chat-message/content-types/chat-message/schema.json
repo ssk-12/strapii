@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "chat_messages",
+  "info": {
+    "singularName": "chat-message",
+    "pluralName": "chat-messages",
+    "displayName": "ChatMessage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "message": {
+      "type": "string",
+      "required": true
+    },
+    "sender": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "chat_messages"
+    }
+  }
+}
