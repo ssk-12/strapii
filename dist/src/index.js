@@ -7,7 +7,7 @@ module.exports = {
     bootstrap({ strapi }) {
         const io = new socket_io_1.Server(strapi.server.httpServer, {
             cors: {
-                origin: 'http://localhost:3000', // Adjust the origin as needed
+                origin: '*',
                 methods: ['GET', 'POST'],
                 allowedHeaders: ['Content-Type'],
                 credentials: true,
