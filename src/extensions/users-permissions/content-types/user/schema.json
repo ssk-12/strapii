@@ -65,11 +65,11 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "chat_messages": {
+    "chat_sessions": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::chat-message.chat-message",
-      "mappedBy": "sender"
+      "target": "api::chat-session.chat-session",
+      "mappedBy": "user"
     }
   }
 }

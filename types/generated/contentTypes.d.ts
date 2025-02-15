@@ -369,12 +369,13 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiChatMessageChatMessage extends Struct.CollectionTypeSchema {
-  collectionName: 'chat_messages';
+export interface ApiChatSessionChatSession extends Struct.CollectionTypeSchema {
+  collectionName: 'chat_sessions';
   info: {
-    displayName: 'ChatMessage';
-    pluralName: 'chat-messages';
-    singularName: 'chat-message';
+    description: '';
+    displayName: 'ChatSession';
+    pluralName: 'chat-sessions';
+    singularName: 'chat-session';
   };
   options: {
     draftAndPublish: true;
@@ -386,15 +387,50 @@ export interface ApiChatMessageChatMessage extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::chat-message.chat-message'
+      'api::chat-session.chat-session'
     > &
       Schema.Attribute.Private;
-    message: Schema.Attribute.String & Schema.Attribute.Required;
+    messages: Schema.Attribute.Relation<'oneToMany', 'api::message.message'>;
     publishedAt: Schema.Attribute.DateTime;
-    sender: Schema.Attribute.Relation<
+    Title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+  };
+}
+
+export interface ApiMessageMessage extends Struct.CollectionTypeSchema {
+  collectionName: 'messages';
+  info: {
+    description: '';
+    displayName: 'Message';
+    pluralName: 'messages';
+    singularName: 'message';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    chat_session: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::chat-session.chat-session'
+    >;
+    Content: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::message.message'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    Timestamp: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -860,9 +896,9 @@ export interface PluginUsersPermissionsUser
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    chat_messages: Schema.Attribute.Relation<
+    chat_sessions: Schema.Attribute.Relation<
       'oneToMany',
-      'api::chat-message.chat-message'
+      'api::chat-session.chat-session'
     >;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -914,7 +950,8 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::chat-message.chat-message': ApiChatMessageChatMessage;
+      'api::chat-session.chat-session': ApiChatSessionChatSession;
+      'api::message.message': ApiMessageMessage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
